@@ -1,0 +1,151 @@
+{
+  "_comment": "Escalation policy. Day offsets are relative to due_date. Negative = before due. All timings/thresholds are editable here without touching code.",
+
+  "currency": "USD",
+
+  "cadence": {
+    "min_days_between_contacts": 5,
+    "_comment": "Never contact the same invoice more than once within this many days, even if a tier boundary is crossed, unless a hard_stop below fires."
+  },
+
+  "tiers": [
+    {
+      "id": "pre_due_notice",
+      "day_offset": -5,
+      "recipient": "ap_contact",
+      "tone": "friendly_heads_up",
+      "auto_send": true
+    },
+    {
+      "id": "due_today",
+      "day_offset": 0,
+      "recipient": "ap_contact",
+      "tone": "reminder",
+      "auto_send": true
+    },
+    {
+      "id": "first_followup",
+      "day_offset": 7,
+      "recipient": "ap_contact",
+      "tone": "firm_reminder",
+      "auto_send": true
+    },
+    {
+      "id": "controller_escalation",
+      "day_offset": 14,
+      "recipient": "controller",
+      "cc": ["ap_contact"],
+      "tone": "escalation",
+      "auto_send": true
+    },
+    {
+      "id": "ceo_escalation",
+      "day_offset": 30,
+      "recipient": "ceo",
+      "cc": ["controller", "sales_owner"],
+      "tone": "urgent",
+      "auto_send": false,
+      "_comment": "First tier that reaches a customer's CEO. Always held for human sign-off regardless of auto_send default policy below."
+    },
+    {
+      "id": "owner_escalation",
+      "day_offset": 45,
+      "recipient": "owner",
+      "cc": ["ceo", "sales_owner", "collections"],
+      "tone": "final_notice",
+      "auto_send": false,
+      "_comment": "Highest tier before collections/legal handoff. Always held for human sign-off."
+    }
+  ],
+
+  "always_hold_for_human": [
+    "ceo_escalation",
+    "owner_escalation"
+  ],
+
+  "reply_handling": {
+    "categories": {
+      "already_paid_claim": {
+        "action": "verify_against_ledger",
+        "if_verified_true": "mark_paid_no_further_contact",
+        "if_unverified": "hold_for_human",
+        "auto_send_followup": false
+      },
+      "dispute_amount_or_line_items": {
+        "action": "freeze_escalation_clock",
+        "auto_send_followup": false,
+        "notify": "controller_and_sales_owner"
+      },
+      "dispute_reference_mismatch": {
+        "action": "freeze_escalation_clock",
+        "auto_send_followup": false,
+        "notify": "collections"
+      },
+      "missing_invoice_or_po_request": {
+        "action": "freeze_escalation_clock",
+        "auto_send_followup": false,
+        "notify": "collections",
+        "_comment": "Resend requested document; do not count days lost to this against the customer."
+      },
+      "promise_to_pay": {
+        "action": "suppress_until_promised_date_plus_grace",
+        "grace_days": 3,
+        "auto_send_followup": false,
+        "_comment": "If unpaid after promised_date + grace_days, resume escalation at the next tier up from where it paused."
+      },
+      "payment_plan_proposal": {
+        "action": "hold_for_human",
+        "auto_send_followup": false,
+        "notify": "controller_and_sales_owner"
+      },
+      "request_statement_or_documents": {
+        "action": "freeze_escalation_clock",
+        "auto_send_followup": false,
+        "notify": "collections"
+      },
+      "contact_change": {
+        "action": "update_contact_and_continue",
+        "auto_send_followup": true
+      },
+      "bounced_or_invalid_contact": {
+        "action": "hard_stop_contact",
+        "auto_send_followup": false,
+        "notify": "sales_owner",
+        "_comment": "Never auto-email a bounced address again. Escalate to account director to get a working contact."
+      },
+      "auto_reply_or_ack": {
+        "action": "no_action",
+        "auto_send_followup": false,
+        "_comment": "Out-of-office / ticket-received auto-replies are not a human response. Resume normal cadence as if nothing was received."
+      },
+      "legal_escalation": {
+        "action": "hard_stop_all_automation",
+        "auto_send_followup": false,
+        "notify": "sales_owner_and_collections",
+        "_comment": "Once legal counsel is invoked, no further automated emails to this customer, ever, until a human clears it."
+      },
+      "explicit_stop_request_or_churn_threat": {
+        "action": "hard_stop_all_automation",
+        "auto_send_followup": false,
+        "notify": "sales_owner",
+        "_comment": "Relationship risk overrides collections cadence. Human takes over."
+      },
+      "ambiguous_or_unclear": {
+        "action": "hold_for_human",
+        "auto_send_followup": false
+      }
+    }
+  },
+
+  "risk_flagging": {
+    "lookback_days": 545,
+    "_comment": "~18 months, matches the full history window.",
+    "factors": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "invoice_amount_vs_customer_median",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ]
+  }
+}

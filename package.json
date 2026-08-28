@@ -1,0 +1,24 @@
+{
+  "name": "collections-agent",
+  "version": "1.0.0",
+  "description": "Collections agent for accounts receivable: escalation policy, reply handling, dry-run replay, and risk flagging.",
+  "type": "module",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js run",
+    "replay": "node src/index.js replay",
+    "risk": "node src/index.js risk",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "csv-parse": "7.0.2",
+    "dayjs": "1.11.23"
+  },
+  "devDependencies": {
+    "vitest": "4.1.11"
+  }
+}
