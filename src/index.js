@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * index.js — the single CLI entry point.
+ * index.js - the single CLI entry point.
  *
  *   node src/index.js replay   dry-run the agent over full history -> out/replay_log.jsonl
  *   node src/index.js risk     risk-flag every currently-open invoice -> out/risk_flags.json
@@ -18,7 +18,7 @@ const COMMANDS = {
   risk: runRiskCli,
   run: async () => {
     await runReplayCli();
-    console.log('\n' + '─'.repeat(60) + '\n');
+    console.log('\n' + '-'.repeat(60) + '\n');
     await runRiskCli();
   },
 };

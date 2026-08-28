@@ -6,7 +6,7 @@
     "reasons": [
       "customer settles 36d late on average (100% of past invoices paid after due)",
       "1 dispute reply from this customer in the reply history",
-      "already 36d past due and still unpaid ($18,989.52 outstanding) — has effectively already gone late",
+      "already 36d past due and still unpaid ($18,989.52 outstanding), has effectively already gone late",
       "this invoice is in a frozen escalation state from an inbound reply (dispute_amount_or_line_items)",
       "1 other open invoice for this customer is disputed/held (INV-2357)"
     ],
@@ -32,7 +32,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 25d late on average (100% of past invoices paid after due)",
-      "already 14d past due and still unpaid ($10,664.57 outstanding) — has effectively already gone late",
+      "already 14d past due and still unpaid ($10,664.57 outstanding), has effectively already gone late",
       "this invoice is in a frozen escalation state from an inbound reply (missing_invoice_or_po_request)",
       "1 other open invoice for this customer is disputed/held (INV-2087)"
     ],
@@ -57,7 +57,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 25d late on average (100% of past invoices paid after due)",
-      "already 25d past due and still unpaid ($9,952.53 outstanding) — has effectively already gone late",
+      "already 25d past due and still unpaid ($9,952.53 outstanding), has effectively already gone late",
       "this invoice is held for human review (unverified-paid-claim)",
       "1 other open invoice for this customer is disputed/held (INV-2085)"
     ],
@@ -82,8 +82,8 @@
     "risk": "high",
     "reasons": [
       "customer settles ~11d late on average",
-      "already 15d past due and still unpaid ($31,165.01 outstanding) — has effectively already gone late",
-      "customer has referred this account to legal counsel — automation hard-stopped",
+      "already 15d past due and still unpaid ($31,165.01 outstanding), has effectively already gone late",
+      "customer has referred this account to legal counsel, automation hard-stopped",
       "promise-to-pay in effect until 2026-09-01; invoice still unpaid, escalation clock paused"
     ],
     "score": 8,
@@ -107,7 +107,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 71d late on average (100% of past invoices paid after due)",
-      "already 44d past due and still unpaid ($314.14 outstanding) — has effectively already gone late",
+      "already 44d past due and still unpaid ($314.14 outstanding), has effectively already gone late",
       "customer has threatened to move the account over collections contact"
     ],
     "score": 8,
@@ -131,7 +131,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 71d late on average (100% of past invoices paid after due)",
-      "already 22d past due and still unpaid ($269.57 outstanding) — has effectively already gone late",
+      "already 22d past due and still unpaid ($269.57 outstanding), has effectively already gone late",
       "customer has threatened to move the account over collections contact"
     ],
     "score": 8,
@@ -155,7 +155,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 21d late on average (100% of past invoices paid after due)",
-      "already 20d past due and still unpaid ($7,101.18 outstanding) — has effectively already gone late",
+      "already 20d past due and still unpaid ($7,101.18 outstanding), has effectively already gone late",
       "this invoice is held for human review (payment_plan_proposal)",
       "1 other open invoice for this customer is disputed/held (INV-2268)"
     ],
@@ -180,7 +180,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 21d late on average (100% of past invoices paid after due)",
-      "already 6d past due and still unpaid ($6,768.87 outstanding) — has effectively already gone late",
+      "already 6d past due and still unpaid ($6,768.87 outstanding), has effectively already gone late",
       "this invoice is held for human review (ambiguous_or_unclear)",
       "1 other open invoice for this customer is disputed/held (INV-2267)"
     ],
@@ -205,8 +205,8 @@
     "risk": "high",
     "reasons": [
       "customer settles ~11d late on average",
-      "already 29d past due and still unpaid ($24,731.97 outstanding) — has effectively already gone late",
-      "customer has referred this account to legal counsel — automation hard-stopped"
+      "already 29d past due and still unpaid ($24,731.97 outstanding), has effectively already gone late",
+      "customer has referred this account to legal counsel, automation hard-stopped"
     ],
     "score": 7,
     "factors_triggered": [
@@ -229,8 +229,8 @@
     "risk": "high",
     "reasons": [
       "customer settles ~11d late on average",
-      "already 7d past due and still unpaid ($37,685.06 outstanding) — has effectively already gone late",
-      "customer has referred this account to legal counsel — automation hard-stopped"
+      "already 7d past due and still unpaid ($37,685.06 outstanding), has effectively already gone late",
+      "customer has referred this account to legal counsel, automation hard-stopped"
     ],
     "score": 7,
     "factors_triggered": [
@@ -253,7 +253,7 @@
     "risk": "high",
     "reasons": [
       "customer settles 25d late on average (100% of past invoices paid after due)",
-      "already 12d past due and still unpaid ($8,797.11 outstanding) — has effectively already gone late",
+      "already 12d past due and still unpaid ($8,797.11 outstanding), has effectively already gone late",
       "2 other open invoices for this customer are disputed/held (INV-2087, INV-2085)"
     ],
     "score": 6,
@@ -422,7 +422,7 @@
     "reasons": [
       "customer settles ~11d late on average",
       "9d until due",
-      "customer has referred this account to legal counsel — automation hard-stopped"
+      "customer has referred this account to legal counsel, automation hard-stopped"
     ],
     "score": 4,
     "factors_triggered": [
@@ -444,9 +444,9 @@
     "risk": "medium",
     "reasons": [
       "customer settles ~11d late on average",
-      "invoice is only 0.5x the customer's median — low exposure",
+      "invoice is only 0.5x the customer's median, low exposure",
       "34d of runway before due",
-      "customer has referred this account to legal counsel — automation hard-stopped"
+      "customer has referred this account to legal counsel, automation hard-stopped"
     ],
     "score": 4,
     "factors_triggered": [
@@ -469,7 +469,7 @@
     "reasons": [
       "customer settles ~11d late on average",
       "36d of runway before due",
-      "customer has referred this account to legal counsel — automation hard-stopped"
+      "customer has referred this account to legal counsel, automation hard-stopped"
     ],
     "score": 4,
     "factors_triggered": [
@@ -590,7 +590,7 @@
     "customer_id": "C-01",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "1 dispute reply from this customer in the reply history",
       "6d until due",
       "this invoice is in a frozen escalation state from an inbound reply (dispute_reference_mismatch)"
@@ -776,7 +776,7 @@
     "customer_id": "C-01",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "1 dispute reply from this customer in the reply history",
       "15d until due",
       "1 other open invoice for this customer is disputed/held (INV-2033)"
@@ -800,9 +800,9 @@
     "customer_id": "C-01",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "1 dispute reply from this customer in the reply history",
-      "invoice is only 0.6x the customer's median — low exposure",
+      "invoice is only 0.6x the customer's median, low exposure",
       "33d of runway before due",
       "1 other open invoice for this customer is disputed/held (INV-2033)"
     ],
@@ -825,7 +825,7 @@
     "customer_id": "C-01",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "1 dispute reply from this customer in the reply history",
       "38d of runway before due",
       "1 other open invoice for this customer is disputed/held (INV-2033)"
@@ -849,7 +849,7 @@
     "customer_id": "C-06",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-2d vs due) — protective",
+      "customer settles on time on average (-2d vs due), protective",
       "6d until due",
       "this invoice is in a frozen escalation state from an inbound reply (request_statement_or_documents)"
     ],
@@ -892,9 +892,9 @@
     "customer_id": "C-11",
     "risk": "medium",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "12d until due",
-      "the AP contact for this invoice has bounced — we currently cannot reach them"
+      "the AP contact for this invoice has bounced, we currently cannot reach them"
     ],
     "score": 2,
     "factors_triggered": [
@@ -914,7 +914,7 @@
     "customer_id": "C-06",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-2d vs due) — protective",
+      "customer settles on time on average (-2d vs due), protective",
       "27d until due",
       "1 other open invoice for this customer is disputed/held (INV-2229)"
     ],
@@ -936,7 +936,7 @@
     "customer_id": "C-06",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-2d vs due) — protective",
+      "customer settles on time on average (-2d vs due), protective",
       "44d of runway before due",
       "1 other open invoice for this customer is disputed/held (INV-2229)"
     ],
@@ -958,7 +958,7 @@
     "customer_id": "C-06",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-2d vs due) — protective",
+      "customer settles on time on average (-2d vs due), protective",
       "41d of runway before due",
       "1 other open invoice for this customer is disputed/held (INV-2229)"
     ],
@@ -980,7 +980,7 @@
     "customer_id": "C-11",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "54d of runway before due",
       "1 other open invoice for this customer is disputed/held (INV-2377)"
     ],
@@ -1002,7 +1002,7 @@
     "customer_id": "C-09",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "21d until due"
     ],
     "score": 0,
@@ -1021,7 +1021,7 @@
     "customer_id": "C-09",
     "risk": "low",
     "reasons": [
-      "customer settles on time on average (-1d vs due) — protective",
+      "customer settles on time on average (-1d vs due), protective",
       "12d until due"
     ],
     "score": 0,

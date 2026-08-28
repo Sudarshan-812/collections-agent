@@ -1,18 +1,18 @@
 /**
- * replies.js — classify inbound customer replies, then cross-check the claim
+ * replies.js - classify inbound customer replies, then cross-check the claim
  * against the real ledger before deciding an outcome.
  *
- * Default path: deterministic regex/keyword rules tuned against the 20 files
- * in data/inbound_replies/. No network calls.
+ * Default path: deterministic regex/keyword rules tuned against the 20 files in
+ * data/inbound_replies/. No network calls.
  *
  * Optional path: if process.env.ANTHROPIC_API_KEY is set, classification is
  * delegated to the Anthropic Messages API with the same category list and the
  * same return shape. If that call fails for any reason it falls back to the
  * deterministic rules, so the pipeline always runs.
  *
- * Either way, every classification is then reconciled against src/ledger.js:
- * a "claims paid" reply is only treated as paid if payments.csv actually
- * backs it up; a reply that references an invoice we don't have is flagged.
+ * Either way, every classification is reconciled against src/ledger.js: a
+ * "claims paid" reply is only treated as paid if payments.csv actually backs
+ * it up; a reply that references an invoice we don't have is flagged.
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -23,10 +23,6 @@ import { loadPolicy } from './policy.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPLIES_DIR = join(HERE, '..', 'data', 'inbound_replies');
-
-// ---------------------------------------------------------------------------
-// parse a reply file
-// ---------------------------------------------------------------------------
 
 /** Parse one `NN_reply.txt` into { file, from, date, subject, body, invoice_id, invoice_ids }. */
 export function parseReplyFile(path) {
@@ -54,17 +50,13 @@ export function parseReplyFile(path) {
     date: header.date || '',
     subject,
     body,
-    raw,
     invoice_id: subjectIds[0] || allIds[0] || null, // the one the reminder was about
     invoice_ids: allIds, // every INV-id mentioned anywhere
   };
 }
 
-// ---------------------------------------------------------------------------
-// deterministic classifier — ordered rules, first match wins
-// hard-stops (bounce / legal / churn) are checked before softer categories
-// ---------------------------------------------------------------------------
-
+// Deterministic classifier: ordered rules, first match wins. Hard-stops
+// (bounce / legal / churn) are checked before softer categories.
 const RULES = [
   {
     category: 'bounced_or_invalid_contact',
@@ -139,7 +131,7 @@ const RULES = [
   },
 ];
 
-/** Deterministic classification — always available, no network. */
+/** Deterministic classification: always available, no network. */
 export function classifyDeterministic(reply) {
   const haystack = `${reply.from}\n${reply.subject}\n${reply.body}`.toLowerCase();
   for (const rule of RULES) {
@@ -149,15 +141,12 @@ export function classifyDeterministic(reply) {
   }
   return {
     category: 'ambiguous_or_unclear',
-    matched_by: 'no rule matched — default to ambiguous, hold for a human',
+    matched_by: 'no rule matched, default to ambiguous, hold for a human',
     source: 'deterministic',
   };
 }
 
-// ---------------------------------------------------------------------------
-// optional Anthropic path — same input, same output shape
-// ---------------------------------------------------------------------------
-
+// Optional Anthropic path: same input, same output shape.
 async function classifyWithAnthropic(reply, categories) {
   const list = Object.keys(categories);
   const system =
@@ -208,10 +197,6 @@ export async function classifyReply(reply, { policy } = {}) {
   return classifyDeterministic(reply);
 }
 
-// ---------------------------------------------------------------------------
-// ledger cross-check
-// ---------------------------------------------------------------------------
-
 const MONTHS = {
   jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6,
   aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11,
@@ -220,14 +205,13 @@ const MONTHS = {
 const WEEKDAYS = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
 
 function isoOf(year, monthIdx, day) {
-  const d = new Date(Date.UTC(year, monthIdx, day));
-  return d.toISOString().slice(0, 10);
+  return new Date(Date.UTC(year, monthIdx, day)).toISOString().slice(0, 10);
 }
 
 /**
  * Every resolvable date mentioned in `text`, as ISO strings, ascending.
- * Handles: 2026-08-11 · "11 August" / "August 11" · "the 30th" (→ ref month,
- * rolled forward if already past) · weekday names (→ next such day ≥ ref).
+ * Handles: 2026-08-11, "11 August" / "August 11", "the 30th" (ref month,
+ * rolled forward if already past), weekday names (next such day on/after ref).
  * `refDate` (the reply's own Date header) anchors relative expressions.
  */
 function extractDates(rawText, refDate) {
@@ -290,8 +274,8 @@ function money(n) {
 
 /**
  * Reconcile a classification against the real ledger and decide the outcome.
- * Returns { invoice_id, invoice_exists, mentioned_invoice_ids, unknown_invoice_ids,
- *           is_fully_paid, amount, due_date, verified, fact, outcome }.
+ * Returns { invoice_id, invoice_exists, unknown_invoice_ids, verified, action,
+ *           fact, outcome, ...promise extras }.
  */
 export function crossCheckLedger(reply, category, ledger, policy) {
   const cats = policy.reply_handling.categories;
@@ -299,18 +283,15 @@ export function crossCheckLedger(reply, category, ledger, policy) {
   const inv = primaryId ? ledger.invoicesById.get(primaryId) : null;
   const unknownMentioned = reply.invoice_ids.filter((id) => !ledger.invoicesById.has(id));
   const extra = unknownMentioned.length
-    ? ` Reply also references ${unknownMentioned.join(', ')} — not in our ledger.`
+    ? ` Reply also references ${unknownMentioned.join(', ')}, not in our ledger.`
     : '';
 
   const out = {
     invoice_id: primaryId,
     invoice_exists: Boolean(inv),
-    mentioned_invoice_ids: reply.invoice_ids,
     unknown_invoice_ids: unknownMentioned,
-    is_fully_paid: inv ? inv.is_fully_paid : null,
-    amount: inv ? inv.amount : null,
-    due_date: inv ? inv.due_date : null,
     verified: null,
+    action: '',
     fact: '',
     outcome: '',
   };
@@ -319,7 +300,7 @@ export function crossCheckLedger(reply, category, ledger, policy) {
     out.verified = false;
     out.action = category === 'already_paid_claim' ? 'hold_for_human' : 'route_to_collections';
     out.fact =
-      `${primaryId ?? '(no invoice id in reply)'} — not found in our ledger. ` +
+      `${primaryId ?? '(no invoice id in reply)'} not found in our ledger. ` +
       `Nothing to mark paid or escalate; handle as a reference problem.` + extra;
     out.outcome =
       category === 'already_paid_claim'
@@ -340,7 +321,7 @@ export function crossCheckLedger(reply, category, ledger, policy) {
       out.action = cats.already_paid_claim.if_verified_true; // mark_paid_no_further_contact
       out.outcome = cats.already_paid_claim.if_verified_true;
       out.fact =
-        `claims paid${claimed ? ` ${claimed}` : ''} — checked payments.csv: TRUE, ` +
+        `claims paid${claimed ? ` ${claimed}` : ''}, checked payments.csv: TRUE, ` +
         `${inv.payments.length} payment(s) totalling ${money(inv.paid_amount)} ` +
         `(latest ${p.payment_date} by ${p.method}); invoice IS fully paid.` + extra;
     } else {
@@ -348,7 +329,7 @@ export function crossCheckLedger(reply, category, ledger, policy) {
       out.action = cats.already_paid_claim.if_unverified; // hold_for_human
       out.outcome = cats.already_paid_claim.if_unverified;
       out.fact =
-        `claims paid/settled${claimed ? ` ~${claimed}` : ''} — checked payments.csv: ` +
+        `claims paid/settled${claimed ? ` ~${claimed}` : ''}, checked payments.csv: ` +
         `no matching payment found; invoice NOT paid (${money(inv.paid_amount)} of ${money(inv.amount)}), ` +
         `${lateStr}. Unverified.` + extra;
     }
@@ -362,9 +343,9 @@ export function crossCheckLedger(reply, category, ledger, policy) {
     out.action = cats.promise_to_pay.action;
     out.promised_date = promised;
     out.suppress_until = promised ? addDays(promised, grace) : null;
-    out.outcome = `${cats.promise_to_pay.action} — until ${out.suppress_until ?? 'promised date + grace'} (promised ${promised ?? '?'} + ${grace}d)`;
+    out.outcome = `${cats.promise_to_pay.action}, until ${out.suppress_until ?? 'promised date + grace'} (promised ${promised ?? '?'} + ${grace}d)`;
     out.fact =
-      `promises payment${promised ? ` by ${promised}` : ''} — checked payments.csv: not yet paid ` +
+      `promises payment${promised ? ` by ${promised}` : ''}, checked payments.csv: not yet paid ` +
       `(${money(inv.paid_amount)} of ${money(inv.amount)}), ${lateStr}. Invoice is real and open, promise is actionable.` +
       extra;
     return out;
@@ -378,15 +359,11 @@ export function crossCheckLedger(reply, category, ledger, policy) {
   out.fact =
     `checked ledger: ${primaryId} is real (${inv.customer?.name ?? inv.customer_id}), ` +
     (inv.is_fully_paid
-      ? `already fully paid (${money(inv.paid_amount)}) — reply may be moot.`
+      ? `already fully paid (${money(inv.paid_amount)}), reply may be moot.`
       : `unpaid, ${money(inv.amount)} outstanding, ${lateStr}.`) +
     extra;
   return out;
 }
-
-// ---------------------------------------------------------------------------
-// top-level: analyze one / all
-// ---------------------------------------------------------------------------
 
 export async function analyzeReply(path, { ledger, policy } = {}) {
   const led = ledger || loadLedger();
@@ -408,14 +385,11 @@ export async function analyzeAll({ dir = REPLIES_DIR, ledger, policy } = {}) {
   return results;
 }
 
-// ---------------------------------------------------------------------------
-// CLI (run: `node src/replies.js`)
-// ---------------------------------------------------------------------------
-
+// CLI: `node src/replies.js`
 async function main() {
   const results = await analyzeAll();
   const usingApi = Boolean(process.env.ANTHROPIC_API_KEY);
-  console.log(`=== replies.js — ${results.length} inbound replies ===`);
+  console.log(`=== replies.js: ${results.length} inbound replies ===`);
   console.log(`classifier: ${usingApi ? 'Anthropic API (ANTHROPIC_API_KEY set)' : 'deterministic rules'}\n`);
 
   const counts = {};
@@ -432,13 +406,13 @@ async function main() {
     console.log('');
   }
 
-  console.log('--- category tally ---');
+  console.log('category tally');
   for (const [cat, n] of Object.entries(counts).sort((a, b) => b[1] - a[1])) {
     console.log(`  ${String(n).padStart(2)}  ${cat}`);
   }
 
   const paidClaims = results.filter((r) => r.classification.category === 'already_paid_claim');
-  console.log('\n--- "already paid" claims, verified against payments.csv ---');
+  console.log('\n"already paid" claims, verified against payments.csv');
   for (const r of paidClaims) {
     console.log(`  ${r.reply.file}  ${r.check.invoice_id}: verified=${r.check.verified}  -> ${r.check.outcome}`);
   }

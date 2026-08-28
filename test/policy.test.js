@@ -8,7 +8,7 @@ import {
 
 const policy = loadPolicy();
 
-// minimal invoice fixture — decideForInvoice only touches these fields
+// minimal invoice fixture: decideForInvoice only touches these fields
 function makeInvoice({ due_date, is_fully_paid = false } = {}) {
   const contact = (who) => ({ name: `${who} person`, email: `${who}@example.com`, title: who });
   return {

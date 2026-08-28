@@ -1,5 +1,5 @@
 /**
- * ledger.js — load + normalize the data pack into an in-memory model.
+ * ledger.js - load and normalize the data pack into an in-memory model.
  *
  * One record per invoice, joined to:
  *   - its customer            (name, payment_terms)
@@ -8,7 +8,7 @@
  *   - all of its payment rows (an invoice can have several)
  *
  * `paid_amount` / `is_fully_paid` are derived from payments.csv only. The
- * invoices.csv `status` column is kept as `status_raw` but never trusted — it
+ * invoices.csv `status` column is kept as `status_raw` but never trusted: it
  * goes stale (e.g. INV-2231 reads "open" there but was paid 2026-08-11).
  *
  * `getLedgerAsOf(date)` returns the ledger as it existed on or before `date`:
@@ -32,10 +32,6 @@ const CUSTOMER_CONTACT_TYPES = ['ap_contact', 'controller', 'ceo', 'owner'];
 const PROVIDER_CONTACT_TYPES = ['sales_owner', 'collections'];
 const ALL_CONTACT_TYPES = [...CUSTOMER_CONTACT_TYPES, ...PROVIDER_CONTACT_TYPES];
 
-// ---------------------------------------------------------------------------
-// helpers
-// ---------------------------------------------------------------------------
-
 function readCsv(path) {
   return parse(readFileSync(path, 'utf8'), {
     columns: true,
@@ -44,7 +40,7 @@ function readCsv(path) {
   });
 }
 
-/** Normalize any date input to a `YYYY-MM-DD` string (lexical compare === chronological). */
+/** Normalize any date input to a 'YYYY-MM-DD' string (lexical compare === chronological). */
 function toIso(value) {
   if (value == null || value === '') return null;
   if (value instanceof Date) return value.toISOString().slice(0, 10);
@@ -56,7 +52,7 @@ function toIso(value) {
   return d.toISOString().slice(0, 10);
 }
 
-/** Money in whole cents — avoids float drift when summing split payments. */
+/** Money in whole cents; avoids float drift when summing split payments. */
 function toCents(n) {
   return Math.round(Number(n) * 100);
 }
@@ -74,10 +70,6 @@ function applyPaidState(rec) {
   return rec;
 }
 
-// ---------------------------------------------------------------------------
-// load
-// ---------------------------------------------------------------------------
-
 const _cache = new Map();
 
 /**
@@ -93,7 +85,6 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
   const invoicesRaw = readCsv(join(dataDir, 'invoices.csv'));
   const paymentsRaw = readCsv(join(dataDir, 'payments.csv'));
 
-  // customers: id -> { customer_id, name, payment_terms }
   const customersById = new Map();
   for (const row of customersRaw) {
     customersById.set(row.customer_id, {
@@ -103,7 +94,7 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
     });
   }
 
-  // contacts: customer_id -> { <contact_type>: { name, email, title, side } }
+  // customer_id -> { <contact_type>: { name, email, title, side } }
   const contactsByCustomer = new Map();
   for (const row of contactsRaw) {
     if (!contactsByCustomer.has(row.customer_id)) contactsByCustomer.set(row.customer_id, {});
@@ -115,7 +106,7 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
     };
   }
 
-  // payments: invoice_id -> [ { invoice_id, payment_date, amount, method } ] (date-sorted)
+  // invoice_id -> [ { invoice_id, payment_date, amount, method } ], date-sorted
   const paymentsByInvoice = new Map();
   for (const row of paymentsRaw) {
     const p = {
@@ -131,7 +122,6 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
     list.sort((a, b) => (a.payment_date < b.payment_date ? -1 : a.payment_date > b.payment_date ? 1 : 0));
   }
 
-  // one record per invoice
   const invoices = invoicesRaw.map((row) => {
     const cc = contactsByCustomer.get(row.customer_id) || {};
     const contacts = {};
@@ -144,7 +134,7 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
       due_date: toIso(row.due_date),
       amount: toCents(row.amount) / 100,
       terms: row.terms,
-      status_raw: row.status, // kept for reference; NOT trusted
+      status_raw: row.status, // kept for reference, never trusted
       customer: customersById.get(row.customer_id) || null,
       contacts,
       payments: (paymentsByInvoice.get(row.invoice_id) || []).map((p) => ({ ...p })),
@@ -154,7 +144,7 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
 
   const invoicesById = new Map(invoices.map((inv) => [inv.invoice_id, inv]));
 
-  // payments referencing an invoice_id we don't have — surfaced, not silently dropped
+  // payments referencing an invoice_id we don't have: surfaced, not silently dropped
   const orphanPayments = [];
   for (const [invoiceId, list] of paymentsByInvoice) {
     if (!invoicesById.has(invoiceId)) orphanPayments.push(...list);
@@ -173,15 +163,11 @@ export function loadLedger({ dataDir = DATA_DIR } = {}) {
   return ledger;
 }
 
-// ---------------------------------------------------------------------------
-// point-in-time view
-// ---------------------------------------------------------------------------
-
 /**
- * The ledger as it existed on or before `date`.
- * - invoices issued after `date` are excluded
- * - payments dated after `date` are excluded
- * - paid_amount / is_fully_paid / open_amount are recomputed from visible payments
+ * The ledger as it existed on or before `date`:
+ * invoices issued after `date` are excluded, payments dated after `date` are
+ * excluded, and paid_amount / is_fully_paid / open_amount are recomputed from
+ * the visible payments only.
  *
  * Returns { asOf, invoices, invoicesById, payments }.
  */
@@ -207,14 +193,7 @@ export function getLedgerAsOf(date, { dataDir = DATA_DIR } = {}) {
   };
 }
 
-// ---------------------------------------------------------------------------
-// sanity checks (run: `node src/ledger.js`)
-// ---------------------------------------------------------------------------
-
-function usd(n) {
-  return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-}
-
+// Sanity checks: `node src/ledger.js`
 function runSanityChecks() {
   const full = loadLedger();
   console.log('=== ledger.js sanity checks ===\n');
@@ -225,8 +204,9 @@ function runSanityChecks() {
   const asOf = getLedgerAsOf(LEDGER_DATE);
   const paid = asOf.invoices.filter((i) => i.is_fully_paid);
   const open = asOf.invoices.filter((i) => !i.is_fully_paid);
+  const usd = (n) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
-  console.log(`\n--- as of ledger date ${asOf.asOf} ---`);
+  console.log(`\nas of ledger date ${asOf.asOf}`);
   console.log(`Invoices visible (issued on/before ${asOf.asOf}) : ${asOf.invoices.length}`);
   console.log(`  fully paid (derived from payments)  : ${paid.length}`);
   console.log(`  still open  (derived from payments)  : ${open.length}`);
@@ -245,17 +225,17 @@ function runSanityChecks() {
   }
 
   const inv = asOf.invoicesById.get('INV-2231');
-  console.log('\n--- INV-2231: stale-status spot check ---');
+  console.log('\nINV-2231 stale-status spot check');
   console.log(`  customer      : ${inv.customer.name} (${inv.customer_id}, ${inv.customer.payment_terms})`);
   console.log(`  raw status    : ${inv.status_raw}`);
   console.log(`  amount        : ${usd(inv.amount)}`);
   console.log(`  payments      : ${inv.payments.map((p) => `${p.payment_date} ${usd(p.amount)} ${p.method}`).join('; ') || '(none)'}`);
   console.log(`  paid_amount   : ${usd(inv.paid_amount)}`);
-  console.log(`  is_fully_paid : ${inv.is_fully_paid}  <-- effectively paid despite status_raw="${inv.status_raw}"`);
+  console.log(`  is_fully_paid : ${inv.is_fully_paid}  (effectively paid despite status_raw="${inv.status_raw}")`);
   console.assert(inv.is_fully_paid === true, 'FAIL: INV-2231 should be effectively paid');
   console.assert(inv.status_raw === 'open', 'FAIL: INV-2231 status_raw should still read "open"');
 
-  console.log('\n--- no-future-leakage spot check ---');
+  console.log('\nno-future-leakage spot check');
   const early = getLedgerAsOf('2026-08-10').invoicesById.get('INV-2231');
   console.log(`  as of 2026-08-10, INV-2231 payments visible : ${early.payments.length}`);
   console.log(`  as of 2026-08-10, INV-2231 is_fully_paid    : ${early.is_fully_paid}  (payment dated 2026-08-11 is not yet visible)`);

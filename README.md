@@ -24,7 +24,7 @@ npm run risk     # Deliverable 5: risk flags for currently open invoices -> out/
 npm start        # runs both, in order
 ```
 
-Outputs land in `out/`. Nothing is ever actually sent — this is a dry run against static CSVs, by design (deliverable 4).
+Outputs land in `out/`. Nothing is ever actually sent - this is a dry run against static CSVs, by design (deliverable 4).
 
 ## Project layout
 
@@ -40,7 +40,7 @@ part2.md               Thought exercise (Part 2).
 
 ## Reply classification mode
 
-By default, inbound replies are classified with deterministic rules (keyword/pattern matching tuned against the 20 sample replies in `data/inbound_replies/`) — this keeps the pipeline dependency-free and guaranteed to run with zero setup. If `ANTHROPIC_API_KEY` is set in the environment, the classifier instead calls Claude for the same categorization (see `src/replies.js`), which generalizes better beyond the sample set. Either path produces the same category taxonomy, defined in `config/policy.json` under `reply_handling.categories`.
+By default, inbound replies are classified with deterministic rules (keyword/pattern matching tuned against the 20 sample replies in `data/inbound_replies/`) - this keeps the pipeline dependency-free and guaranteed to run with zero setup. If `ANTHROPIC_API_KEY` is set in the environment, the classifier instead calls Claude for the same categorization (see `src/replies.js`), which generalizes better beyond the sample set. Either path produces the same category taxonomy, defined in `config/policy.json` under `reply_handling.categories`.
 
 ## Testing
 

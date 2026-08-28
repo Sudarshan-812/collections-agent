@@ -1,5 +1,5 @@
 /**
- * risk.js — for every invoice still open as of the ledger date (2026-08-26),
+ * risk.js - for every invoice still open as of the ledger date (2026-08-26),
  * flag how likely it is to "go late" (not be fully paid by its due_date), with
  * plain-English reasons.
  *
@@ -43,8 +43,6 @@ function median(nums) {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
-// -----------------------------------------------------------------------
-
 export async function computeRiskFlags({ asOfDate = LEDGER_DATE } = {}) {
   const ledger = loadLedger();
   const policy = loadPolicy();
@@ -56,7 +54,7 @@ export async function computeRiskFlags({ asOfDate = LEDGER_DATE } = {}) {
   // replay gives us the reply-driven hold/dispute state and the classified replies
   const { stateById, analyses } = await runReplay({ endDate: asOfDate, write: false });
 
-  // ---- per-customer aggregates -------------------------------------
+  // per-customer aggregates
   const custIds = [...new Set(asOf.invoices.map((i) => i.customer_id))];
   const cust = new Map();
   for (const cid of custIds) {
@@ -82,9 +80,9 @@ export async function computeRiskFlags({ asOfDate = LEDGER_DATE } = {}) {
     if (DISPUTE_CATEGORIES.has(classification.category)) c.disputeReplies += 1;
   }
 
-  // ---- customer-level hold map: only OPEN invoices in a dispute/hold state ----
-  // (a hold left on an already-paid invoice is moot; and the customer-wide legal/
-  //  churn hard-stop tags every invoice, so we must not drag paid history in here)
+  // Customer-level hold map, OPEN invoices only. A hold left on an already-paid
+  // invoice is moot, and the customer-wide legal/churn hard-stop tags every
+  // invoice, so we must not drag paid history in here.
   const openIds = new Set(openInvoices.map((i) => i.invoice_id));
   const holdByCustomer = new Map();
   for (const [invId, st] of stateById) {
@@ -97,7 +95,6 @@ export async function computeRiskFlags({ asOfDate = LEDGER_DATE } = {}) {
     holdByCustomer.get(cid).push({ invoice_id: invId, kind });
   }
 
-  // ---- score each open invoice -----------------------------------
   const flags = openInvoices.map((inv) =>
     scoreInvoice(inv, {
       asOfDate,
@@ -139,14 +136,14 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
 
   // 1. customer_historical_avg_days_late
   if (cust?.avgDaysLate == null) {
-    reasons.push('no settled invoices for this customer yet — no payment-timing baseline');
+    reasons.push('no settled invoices for this customer yet, no payment-timing baseline');
   } else {
     const a = Math.round(cust.avgDaysLate);
     const latePctTxt = cust.latePct != null ? `${Math.round(cust.latePct * 100)}% of past invoices paid after due` : '';
     if (a >= 15) add('customer_historical_avg_days_late', 2, `customer settles ${a}d late on average (${latePctTxt})`);
     else if (a >= 5) add('customer_historical_avg_days_late', 1, `customer settles ~${a}d late on average`);
-    else if (a <= 0) reasons.push(`customer settles on time on average (${a >= 0 ? '+' : ''}${a}d vs due) — protective`);
-    else reasons.push(`customer settles ~${a}d late on average — minor`);
+    else if (a <= 0) reasons.push(`customer settles on time on average (${a >= 0 ? '+' : ''}${a}d vs due), protective`);
+    else reasons.push(`customer settles ~${a}d late on average, minor`);
   }
 
   // 2. customer_dispute_rate
@@ -163,13 +160,13 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
     } else if (ratio >= 1.4) {
       add('invoice_amount_vs_customer_median', 1, `invoice is ${ratio.toFixed(1)}x the customer's median invoice`);
     } else if (ratio <= 0.6) {
-      reasons.push(`invoice is only ${ratio.toFixed(1)}x the customer's median — low exposure`);
+      reasons.push(`invoice is only ${ratio.toFixed(1)}x the customer's median, low exposure`);
     }
   }
 
   // 4. days_until_due
   if (daysUntilDue < 0) {
-    add('days_until_due', 3, `already ${-daysUntilDue}d past due and still unpaid (${money(inv.open_amount)} outstanding) — has effectively already gone late`);
+    add('days_until_due', 3, `already ${-daysUntilDue}d past due and still unpaid (${money(inv.open_amount)} outstanding), has effectively already gone late`);
   } else if (daysUntilDue <= 5) {
     add('days_until_due', 1, `only ${daysUntilDue}d until due with ${money(inv.open_amount)} unpaid`);
   } else if (daysUntilDue >= 30) {
@@ -183,11 +180,11 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
   if (kind) {
     const detail = kind.split(':')[1];
     if (detail === 'legal-counsel-invoked') {
-      add('existing_open_dispute_or_hold_state', 3, 'customer has referred this account to legal counsel — automation hard-stopped');
+      add('existing_open_dispute_or_hold_state', 3, 'customer has referred this account to legal counsel, automation hard-stopped');
     } else if (detail === 'churn-threat') {
       add('existing_open_dispute_or_hold_state', 3, 'customer has threatened to move the account over collections contact');
     } else if (detail === 'bounced-contact') {
-      add('existing_open_dispute_or_hold_state', 2, 'the AP contact for this invoice has bounced — we currently cannot reach them');
+      add('existing_open_dispute_or_hold_state', 2, 'the AP contact for this invoice has bounced, we currently cannot reach them');
     } else if (kind.startsWith('frozen')) {
       add('existing_open_dispute_or_hold_state', 2, `this invoice is in a frozen escalation state from an inbound reply (${detail})`);
     } else if (kind.startsWith('held')) {
@@ -200,7 +197,6 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
   const otherHolds = customerHolds.filter((h) => h.invoice_id !== inv.invoice_id);
   const ownCustomerWideStop = kind && kind.startsWith('stopped:') && (kind.includes('legal-counsel') || kind.includes('churn'));
   if (otherHolds.length && !ownCustomerWideStop) {
-    // ...otherwise it's the same customer-wide event already counted above
     const ids = otherHolds.map((h) => h.invoice_id);
     const shown = ids.slice(0, 3).join(', ') + (ids.length > 3 ? `, +${ids.length - 3} more` : '');
     add(
@@ -230,8 +226,7 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
   };
 }
 
-// -----------------------------------------------------------------------
-
+// CLI: `node src/risk.js`
 export async function runRiskCli() {
   const { asOfDate, flags } = await computeRiskFlags();
 
@@ -247,7 +242,7 @@ export async function runRiskCli() {
   console.log(`-> out/risk_flags.json\n`);
 
   for (const bucket of ['high', 'medium']) {
-    console.log(`--- ${bucket.toUpperCase()} ---`);
+    console.log(`${bucket.toUpperCase()}`);
     for (const f of by(bucket)) {
       console.log(`${f.invoice_id}  ${f.customer_id}  score ${f.score}`);
       for (const r of f.reasons) console.log(`   - ${r}`);
@@ -255,7 +250,7 @@ export async function runRiskCli() {
     console.log('');
   }
 
-  console.log('--- LOW (one-liners) ---');
+  console.log('LOW (one-liners)');
   for (const f of by('low')) {
     console.log(`${f.invoice_id}  ${f.customer_id}  score ${f.score}  (${f.signals.days_until_due}d to due)`);
   }

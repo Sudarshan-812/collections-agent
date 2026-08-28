@@ -1,18 +1,18 @@
 /**
- * replay.js — dry-run the collections agent across the full invoice history,
+ * replay.js - dry-run the collections agent across the full invoice history,
  * one simulated day at a time, from the earliest issue_date to the ledger date
  * (2026-08-26). Nothing is sent; every decision is written to
  * out/replay_log.jsonl.
  *
  * Each simulated day:
  *   1. Apply any inbound reply dated that day (src/replies.js) to the referenced
- *      invoice's state per its category's action in config/policy.json:
- *      freeze the escalation clock, hard-stop contact, mark paid, suppress until
- *      a promised date + grace, redirect the AP contact, etc. A reply whose
+ *      invoice's state per its category's action in config/policy.json: freeze
+ *      the escalation clock, hard-stop contact, mark paid, suppress until a
+ *      promised date + grace, redirect the AP contact, etc. A reply whose
  *      invoice_id matches nothing real is logged, not dropped.
  *   2. For every invoice NOT frozen / held / hard-stopped / suppressed / already
  *      paid, run src/policy.js's per-day decision against getLedgerAsOf(day)
- *      only — no lookahead.
+ *      only, no lookahead.
  *   3. Append each decision to the log with a rendered email body.
  */
 
@@ -27,14 +27,14 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = join(HERE, '..', 'out');
 const LOG_PATH = join(OUT_DIR, 'replay_log.jsonl');
 
-// --- date helpers (ISO 'YYYY-MM-DD') --------------------------------------
+// Date helpers: inputs are 'YYYY-MM-DD'.
 const DAY_MS = 86400000;
 const toMs = (iso) => Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10));
 const toIso = (ms) => new Date(ms).toISOString().slice(0, 10);
 const addDays = (iso, n) => toIso(toMs(iso) + n * DAY_MS);
 const money = (n) => `$${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
-// --- reply category -> state action -------------------------------------
+// Reply category -> invoice-state action.
 const FREEZE_CATEGORIES = new Set([
   'dispute_amount_or_line_items',
   'dispute_reference_mismatch',
@@ -43,13 +43,13 @@ const FREEZE_CATEGORIES = new Set([
 ]);
 const HOLD_CATEGORIES = new Set(['payment_plan_proposal', 'ambiguous_or_unclear']);
 
-// --- email templates, one per policy tone ------------------------------
+// Email templates, one per policy tone.
 const SUBJECT_LABEL = {
   friendly_heads_up: 'courtesy reminder',
   reminder: 'due today',
   firm_reminder: 'now overdue',
-  escalation: 'overdue — escalation',
-  urgent: 'URGENT — overdue',
+  escalation: 'overdue, escalation',
+  urgent: 'URGENT, overdue',
   final_notice: 'FINAL NOTICE',
 };
 
@@ -57,7 +57,7 @@ const TEMPLATES = {
   friendly_heads_up: (c) =>
 `Hi ${c.first},
 
-Quick courtesy note: invoice ${c.id} for ${c.amount} is due on ${c.due}. Nothing needed yet — just flagging it early so it doesn't slip.
+Quick courtesy note: invoice ${c.id} for ${c.amount} is due on ${c.due}. Nothing needed yet, just flagging it early so it doesn't slip.
 
 Thanks,
 ${c.sender}
@@ -125,9 +125,9 @@ function renderMessage(decision, view) {
     sender,
   };
   const body = (TEMPLATES[decision.tone] || TEMPLATES.reminder)(ctx);
-  const subject = `Invoice ${decision.invoice_id} — ${SUBJECT_LABEL[decision.tone] || 'payment reminder'}`;
+  const subject = `Invoice ${decision.invoice_id}: ${SUBJECT_LABEL[decision.tone] || 'payment reminder'}`;
   const summary =
-    `${decision.tier_id} to ${decision.recipient_tier} <${decision.recipient_email ?? 'no-email'}> — ` +
+    `${decision.tier_id} to ${decision.recipient_tier} <${decision.recipient_email ?? 'no-email'}>: ` +
     `${decision.invoice_id} ${ctx.amount}, due ${ctx.due}` +
     (ctx.overdue > 0 ? `, ${ctx.overdue}d overdue` : '') +
     (decision.held_for_human ? ' [HELD FOR HUMAN SIGN-OFF]' : '');
@@ -142,17 +142,13 @@ function firstNewEmail(reply) {
 function createReplayState() {
   return {
     ...createInvoiceState(),
-    frozen: null, // freeze_escalation_clock — dispute / missing doc / statement request
-    held: null, // hold_for_human — payment plan / ambiguous / unverified paid-claim
-    stopped: null, // hard stop — bounced / legal / churn / payment-confirmed
+    frozen: null, // freeze_escalation_clock: dispute / missing doc / statement request
+    held: null, // hold_for_human: payment plan / ambiguous / unverified paid-claim
+    stopped: null, // hard stop: bounced / legal / churn / payment-confirmed
     suppressUntil: null, // promise_to_pay window end (promised date + grace)
     contactOverride: null, // { tier, email } from contact_change
   };
 }
-
-// -----------------------------------------------------------------------
-// the replay
-// -----------------------------------------------------------------------
 
 export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
   const ledger = loadLedger();
@@ -174,7 +170,6 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
   const log = [];
   const push = (obj) => log.push(obj);
 
-  // --- reply application (step 1) ---
   function applyReply(analysis, day) {
     const { reply, classification, check } = analysis;
     const cat = classification.category;
@@ -188,7 +183,7 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
         reply_file: reply.file,
         referenced_invoice_id: id,
         category: cat,
-        note: 'reply references an invoice_id not present in invoices.csv — not applied to any invoice',
+        note: 'reply references an invoice_id not present in invoices.csv, not applied to any invoice',
       });
       return;
     }
@@ -204,7 +199,7 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
           actionTaken = 'mark paid, stop all contact (payment verified in payments.csv)';
         } else {
           st.held = 'unverified-paid-claim';
-          actionTaken = 'hold for human — payment claim NOT found in payments.csv';
+          actionTaken = 'hold for human, payment claim NOT found in payments.csv';
         }
         break;
 
@@ -241,12 +236,12 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
           stateById.set(ci.invoice_id, cst);
           n += 1;
         }
-        actionTaken = `hard-stop ALL automation for customer ${realInv.customer_id} (${n} invoices) — ${kind}`;
+        actionTaken = `hard-stop ALL automation for customer ${realInv.customer_id} (${n} invoices): ${kind}`;
         break;
       }
 
       case 'auto_reply_or_ack':
-        actionTaken = 'no state change — automated acknowledgement, resume normal cadence';
+        actionTaken = 'no state change (automated acknowledgement, resume normal cadence)';
         break;
 
       default:
@@ -286,7 +281,6 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
     }
   }
 
-  // --- day-by-day loop ---
   let dayCount = 0;
   for (let ms = toMs(startDate); ms <= toMs(endDate); ms += DAY_MS) {
     const day = toIso(ms);
@@ -354,15 +348,12 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
   return { log, startDate, endDate, dayCount, stateById, analyses };
 }
 
-// -----------------------------------------------------------------------
-// CLI
-// -----------------------------------------------------------------------
-
+// CLI: `node src/replay.js`
 function print5(log, id) {
   const rows = log.filter((l) => l.invoice_id === id || l.referenced_invoice_id === id);
-  console.log(`\n${id} — ${rows.length} log ${rows.length === 1 ? 'entry' : 'entries'}`);
+  console.log(`\n${id}: ${rows.length} log ${rows.length === 1 ? 'entry' : 'entries'}`);
   if (rows.length === 0) {
-    console.log('  (nothing — agent stayed silent for this invoice across the whole replay)');
+    console.log('  (nothing: agent stayed silent for this invoice across the whole replay)');
     return;
   }
   for (const r of rows) {
@@ -396,19 +387,19 @@ export async function runReplayCli() {
   console.log(`    held-for-human: ${held.length}`);
   console.log(`  replies applied : ${repliesApplied.length}`);
   console.log(`  unmatched reply invoice : ${unmatched.length}`);
-  console.log(`  unknown refs in replies : ${unknownRefs.length}  (${unknownRefs.map((r) => r.referenced_invoice_id).join(', ') || '—'})`);
+  console.log(`  unknown refs in replies : ${unknownRefs.length}  (${unknownRefs.map((r) => r.referenced_invoice_id).join(', ') || 'none'})`);
 
   const byTier = {};
   for (const d of decisions) byTier[d.tier_id] = (byTier[d.tier_id] || 0) + 1;
   console.log('\ndecisions by tier:');
   for (const [t, n] of Object.entries(byTier)) console.log(`  ${String(n).padStart(4)}  ${t}`);
 
-  console.log('\n--- the 5 trickiest-reply invoices ---');
+  console.log('\nthe 5 trickiest-reply invoices');
   for (const id of ['INV-2231', 'INV-2087', 'INV-2430', 'INV-2033', 'INV-2121']) print5(log, id);
 
   const sample = decisions.find((d) => d.tier_id === 'controller_escalation') || decisions[0];
   if (sample) {
-    console.log('\n--- sample rendered email (from the log) ---');
+    console.log('\nsample rendered email (from the log)');
     console.log(`${sample.date}  ${sample.invoice_id}  ${sample.subject}`);
     console.log(sample.message_body);
   }
