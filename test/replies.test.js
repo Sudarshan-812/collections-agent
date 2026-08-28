@@ -17,7 +17,7 @@ const EXPECTED = {
   '02_reply.txt': 'already_paid_claim',
   '03_reply.txt': 'already_paid_claim',
   '04_reply.txt': 'dispute_amount_or_line_items',
-  '05_reply.txt': 'promise_to_pay',
+  '05_reply.txt': 'payment_plan_proposal',
   '06_reply.txt': 'contact_change',
   '07_reply.txt': 'explicit_stop_request_or_churn_threat',
   '08_reply.txt': 'ambiguous_or_unclear',

@@ -150,6 +150,56 @@
     }
   },
   {
+    "invoice_id": "INV-2267",
+    "customer_id": "C-07",
+    "risk": "high",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "already 20d past due and still unpaid ($7,101.18 outstanding) — has effectively already gone late",
+      "this invoice is held for human review (payment_plan_proposal)",
+      "1 other open invoice for this customer is disputed/held (INV-2268)"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -20,
+      "open_amount": 7101.18,
+      "amount_vs_customer_median": 1.12,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:payment_plan_proposal"
+    }
+  },
+  {
+    "invoice_id": "INV-2268",
+    "customer_id": "C-07",
+    "risk": "high",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "already 6d past due and still unpaid ($6,768.87 outstanding) — has effectively already gone late",
+      "this invoice is held for human review (ambiguous_or_unclear)",
+      "1 other open invoice for this customer is disputed/held (INV-2267)"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -6,
+      "open_amount": 6768.87,
+      "amount_vs_customer_median": 1.06,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:ambiguous_or_unclear"
+    }
+  },
+  {
     "invoice_id": "INV-2122",
     "customer_id": "C-03",
     "risk": "high",
@@ -195,55 +245,6 @@
       "customer_avg_days_late": 11,
       "customer_dispute_replies": 0,
       "hold_state": "stopped:legal-counsel-invoked"
-    }
-  },
-  {
-    "invoice_id": "INV-2267",
-    "customer_id": "C-07",
-    "risk": "high",
-    "reasons": [
-      "customer settles 21d late on average (100% of past invoices paid after due)",
-      "already 20d past due and still unpaid ($7,101.18 outstanding) — has effectively already gone late",
-      "promise-to-pay in effect until 2026-09-02; invoice still unpaid, escalation clock paused",
-      "1 other open invoice for this customer is disputed/held (INV-2268)"
-    ],
-    "score": 7,
-    "factors_triggered": [
-      "customer_historical_avg_days_late",
-      "days_until_due",
-      "existing_open_dispute_or_hold_state"
-    ],
-    "signals": {
-      "days_until_due": -20,
-      "open_amount": 7101.18,
-      "amount_vs_customer_median": 1.12,
-      "customer_avg_days_late": 21,
-      "customer_dispute_replies": 0,
-      "hold_state": null
-    }
-  },
-  {
-    "invoice_id": "INV-2268",
-    "customer_id": "C-07",
-    "risk": "high",
-    "reasons": [
-      "customer settles 21d late on average (100% of past invoices paid after due)",
-      "already 6d past due and still unpaid ($6,768.87 outstanding) — has effectively already gone late",
-      "this invoice is held for human review (ambiguous_or_unclear)"
-    ],
-    "score": 7,
-    "factors_triggered": [
-      "customer_historical_avg_days_late",
-      "days_until_due",
-      "existing_open_dispute_or_hold_state"
-    ],
-    "signals": {
-      "days_until_due": -6,
-      "open_amount": 6768.87,
-      "amount_vs_customer_median": 1.06,
-      "customer_avg_days_late": 21,
-      "customer_dispute_replies": 0,
-      "hold_state": "held:ambiguous_or_unclear"
     }
   },
   {
@@ -686,7 +687,7 @@
     "reasons": [
       "customer settles 21d late on average (100% of past invoices paid after due)",
       "10d until due",
-      "1 other open invoice for this customer is disputed/held (INV-2268)"
+      "2 other open invoices for this customer are disputed/held (INV-2267, INV-2268)"
     ],
     "score": 3,
     "factors_triggered": [
@@ -709,7 +710,7 @@
     "reasons": [
       "customer settles 21d late on average (100% of past invoices paid after due)",
       "20d until due",
-      "1 other open invoice for this customer is disputed/held (INV-2268)"
+      "2 other open invoices for this customer are disputed/held (INV-2267, INV-2268)"
     ],
     "score": 3,
     "factors_triggered": [

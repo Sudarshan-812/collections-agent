@@ -97,9 +97,9 @@ const RULES = [
   },
   {
     category: 'payment_plan_proposal',
-    why: 'proposes a multi-period payment plan',
+    why: 'proposes a multi-period or split payment arrangement',
     pattern:
-      /payment plan|instal?ments?|spread (the |this )?(payment|balance|cost)|pay[^.]*over (the )?(next )?(two|three|four|five|six|\d+) (weeks|months)|across the next (two|three|four|\d+) months/i,
+      /payment plan|instal?ments?|spread (the |this )?(payment|balance|cost)|pay[^.]*over (the )?(next )?(two|three|four|five|six|\d+) (weeks|months)|across the next (two|three|four|\d+) months|(\d{1,3}%|half)[^.]*(and|then)[^.]*(balance|remainder|rest|remaining)|(balance|remainder|rest)[^.]*on the \d/i,
   },
   {
     category: 'promise_to_pay',

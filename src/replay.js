@@ -334,7 +334,7 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
         recipient_tier: decision.recipient_tier,
         recipient_email: decision.recipient_email,
         cc: decision.cc_emails,
-        disposition: decision.held_for_human ? 'held-for-human' : 'auto-send',
+        disposition: decision.auto_send ? 'auto-send' : 'held-for-human',
         auto_send: decision.auto_send,
         day_offset: decision.day_offset,
         tone: decision.tone,
