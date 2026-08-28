@@ -279,6 +279,11 @@ function daysBetween(a, b) {
   return Math.round(p(b) - p(a));
 }
 
+function addDays(iso, n) {
+  const ms = Date.UTC(+iso.slice(0, 4), +iso.slice(5, 7) - 1, +iso.slice(8, 10)) + n * 86400000;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
 function money(n) {
   return `$${Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -312,6 +317,7 @@ export function crossCheckLedger(reply, category, ledger, policy) {
 
   if (!inv) {
     out.verified = false;
+    out.action = category === 'already_paid_claim' ? 'hold_for_human' : 'route_to_collections';
     out.fact =
       `${primaryId ?? '(no invoice id in reply)'} — not found in our ledger. ` +
       `Nothing to mark paid or escalate; handle as a reference problem.` + extra;
@@ -331,14 +337,16 @@ export function crossCheckLedger(reply, category, ledger, policy) {
     if (inv.is_fully_paid) {
       const p = inv.payments[inv.payments.length - 1];
       out.verified = true;
-      out.outcome = cats.already_paid_claim.if_verified_true; // mark_paid_no_further_contact
+      out.action = cats.already_paid_claim.if_verified_true; // mark_paid_no_further_contact
+      out.outcome = cats.already_paid_claim.if_verified_true;
       out.fact =
         `claims paid${claimed ? ` ${claimed}` : ''} — checked payments.csv: TRUE, ` +
         `${inv.payments.length} payment(s) totalling ${money(inv.paid_amount)} ` +
         `(latest ${p.payment_date} by ${p.method}); invoice IS fully paid.` + extra;
     } else {
       out.verified = false;
-      out.outcome = cats.already_paid_claim.if_unverified; // hold_for_human
+      out.action = cats.already_paid_claim.if_unverified; // hold_for_human
+      out.outcome = cats.already_paid_claim.if_unverified;
       out.fact =
         `claims paid/settled${claimed ? ` ~${claimed}` : ''} — checked payments.csv: ` +
         `no matching payment found; invoice NOT paid (${money(inv.paid_amount)} of ${money(inv.amount)}), ` +
@@ -351,7 +359,10 @@ export function crossCheckLedger(reply, category, ledger, policy) {
     const promised = parseClaimedDate(`${reply.subject}\n${reply.body}`, refDate);
     const grace = cats.promise_to_pay.grace_days ?? 3;
     out.verified = false;
-    out.outcome = `${cats.promise_to_pay.action} — until ${promised ?? 'promised date'} + ${grace}d grace`;
+    out.action = cats.promise_to_pay.action;
+    out.promised_date = promised;
+    out.suppress_until = promised ? addDays(promised, grace) : null;
+    out.outcome = `${cats.promise_to_pay.action} — until ${out.suppress_until ?? 'promised date + grace'} (promised ${promised ?? '?'} + ${grace}d)`;
     out.fact =
       `promises payment${promised ? ` by ${promised}` : ''} — checked payments.csv: not yet paid ` +
       `(${money(inv.paid_amount)} of ${money(inv.amount)}), ${lateStr}. Invoice is real and open, promise is actionable.` +
@@ -362,6 +373,7 @@ export function crossCheckLedger(reply, category, ledger, policy) {
   // every other category: the deciding fact is just the true ledger state
   out.verified = inv.is_fully_paid;
   const cfg = cats[category] || {};
+  out.action = cfg.action || 'see policy.json';
   out.outcome = (cfg.action || 'see policy.json') + (cfg.notify ? ` (notify ${cfg.notify})` : '');
   out.fact =
     `checked ledger: ${primaryId} is real (${inv.customer?.name ?? inv.customer_id}), ` +
