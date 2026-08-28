@@ -351,7 +351,7 @@ export async function runReplay({ endDate = LEDGER_DATE, write = true } = {}) {
     writeFileSync(LOG_PATH, log.map((o) => JSON.stringify(o)).join('\n') + '\n');
   }
 
-  return { log, startDate, endDate, dayCount, stateById };
+  return { log, startDate, endDate, dayCount, stateById, analyses };
 }
 
 // -----------------------------------------------------------------------

@@ -1,0 +1,1037 @@
+[
+  {
+    "invoice_id": "INV-2356",
+    "customer_id": "C-10",
+    "risk": "high",
+    "reasons": [
+      "customer settles 36d late on average (100% of past invoices paid after due)",
+      "1 dispute reply from this customer in the reply history",
+      "already 36d past due and still unpaid ($18,989.52 outstanding) — has effectively already gone late",
+      "this invoice is in a frozen escalation state from an inbound reply (dispute_amount_or_line_items)",
+      "1 other open invoice for this customer is disputed/held (INV-2357)"
+    ],
+    "score": 9,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -36,
+      "open_amount": 18989.52,
+      "amount_vs_customer_median": 1.24,
+      "customer_avg_days_late": 36,
+      "customer_dispute_replies": 1,
+      "hold_state": "frozen:dispute_amount_or_line_items"
+    }
+  },
+  {
+    "invoice_id": "INV-2085",
+    "customer_id": "C-02",
+    "risk": "high",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "already 14d past due and still unpaid ($10,664.57 outstanding) — has effectively already gone late",
+      "this invoice is in a frozen escalation state from an inbound reply (missing_invoice_or_po_request)",
+      "1 other open invoice for this customer is disputed/held (INV-2087)"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -14,
+      "open_amount": 10664.57,
+      "amount_vs_customer_median": 1.15,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": "frozen:missing_invoice_or_po_request"
+    }
+  },
+  {
+    "invoice_id": "INV-2087",
+    "customer_id": "C-02",
+    "risk": "high",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "already 25d past due and still unpaid ($9,952.53 outstanding) — has effectively already gone late",
+      "this invoice is held for human review (unverified-paid-claim)",
+      "1 other open invoice for this customer is disputed/held (INV-2085)"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -25,
+      "open_amount": 9952.53,
+      "amount_vs_customer_median": 1.07,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:unverified-paid-claim"
+    }
+  },
+  {
+    "invoice_id": "INV-2121",
+    "customer_id": "C-03",
+    "risk": "high",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "already 15d past due and still unpaid ($31,165.01 outstanding) — has effectively already gone late",
+      "customer has referred this account to legal counsel — automation hard-stopped",
+      "promise-to-pay in effect until 2026-09-01; invoice still unpaid, escalation clock paused"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -15,
+      "open_amount": 31165.01,
+      "amount_vs_customer_median": 0.96,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2177",
+    "customer_id": "C-05",
+    "risk": "high",
+    "reasons": [
+      "customer settles 71d late on average (100% of past invoices paid after due)",
+      "already 44d past due and still unpaid ($314.14 outstanding) — has effectively already gone late",
+      "customer has threatened to move the account over collections contact"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -44,
+      "open_amount": 314.14,
+      "amount_vs_customer_median": 0.97,
+      "customer_avg_days_late": 71,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:churn-threat"
+    }
+  },
+  {
+    "invoice_id": "INV-2178",
+    "customer_id": "C-05",
+    "risk": "high",
+    "reasons": [
+      "customer settles 71d late on average (100% of past invoices paid after due)",
+      "already 22d past due and still unpaid ($269.57 outstanding) — has effectively already gone late",
+      "customer has threatened to move the account over collections contact"
+    ],
+    "score": 8,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -22,
+      "open_amount": 269.57,
+      "amount_vs_customer_median": 0.83,
+      "customer_avg_days_late": 71,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:churn-threat"
+    }
+  },
+  {
+    "invoice_id": "INV-2122",
+    "customer_id": "C-03",
+    "risk": "high",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "already 29d past due and still unpaid ($24,731.97 outstanding) — has effectively already gone late",
+      "customer has referred this account to legal counsel — automation hard-stopped"
+    ],
+    "score": 7,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -29,
+      "open_amount": 24731.97,
+      "amount_vs_customer_median": 0.76,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2124",
+    "customer_id": "C-03",
+    "risk": "high",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "already 7d past due and still unpaid ($37,685.06 outstanding) — has effectively already gone late",
+      "customer has referred this account to legal counsel — automation hard-stopped"
+    ],
+    "score": 7,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -7,
+      "open_amount": 37685.06,
+      "amount_vs_customer_median": 1.16,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2267",
+    "customer_id": "C-07",
+    "risk": "high",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "already 20d past due and still unpaid ($7,101.18 outstanding) — has effectively already gone late",
+      "promise-to-pay in effect until 2026-09-02; invoice still unpaid, escalation clock paused",
+      "1 other open invoice for this customer is disputed/held (INV-2268)"
+    ],
+    "score": 7,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -20,
+      "open_amount": 7101.18,
+      "amount_vs_customer_median": 1.12,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2268",
+    "customer_id": "C-07",
+    "risk": "high",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "already 6d past due and still unpaid ($6,768.87 outstanding) — has effectively already gone late",
+      "this invoice is held for human review (ambiguous_or_unclear)"
+    ],
+    "score": 7,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -6,
+      "open_amount": 6768.87,
+      "amount_vs_customer_median": 1.06,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:ambiguous_or_unclear"
+    }
+  },
+  {
+    "invoice_id": "INV-2086",
+    "customer_id": "C-02",
+    "risk": "high",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "already 12d past due and still unpaid ($8,797.11 outstanding) — has effectively already gone late",
+      "2 other open invoices for this customer are disputed/held (INV-2087, INV-2085)"
+    ],
+    "score": 6,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": -12,
+      "open_amount": 8797.11,
+      "amount_vs_customer_median": 0.95,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2357",
+    "customer_id": "C-10",
+    "risk": "high",
+    "reasons": [
+      "customer settles 36d late on average (100% of past invoices paid after due)",
+      "1 dispute reply from this customer in the reply history",
+      "6d until due",
+      "this invoice is in a frozen escalation state from an inbound reply (missing_invoice_or_po_request)",
+      "1 other open invoice for this customer is disputed/held (INV-2356)"
+    ],
+    "score": 6,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 6,
+      "open_amount": 13915.41,
+      "amount_vs_customer_median": 0.91,
+      "customer_avg_days_late": 36,
+      "customer_dispute_replies": 1,
+      "hold_state": "frozen:missing_invoice_or_po_request"
+    }
+  },
+  {
+    "invoice_id": "INV-2179",
+    "customer_id": "C-05",
+    "risk": "high",
+    "reasons": [
+      "customer settles 71d late on average (100% of past invoices paid after due)",
+      "23d until due",
+      "customer has threatened to move the account over collections contact"
+    ],
+    "score": 5,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 23,
+      "open_amount": 245.1,
+      "amount_vs_customer_median": 0.76,
+      "customer_avg_days_late": 71,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:churn-threat"
+    }
+  },
+  {
+    "invoice_id": "INV-2180",
+    "customer_id": "C-05",
+    "risk": "high",
+    "reasons": [
+      "customer settles 71d late on average (100% of past invoices paid after due)",
+      "56d of runway before due",
+      "customer has threatened to move the account over collections contact"
+    ],
+    "score": 5,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 56,
+      "open_amount": 329.62,
+      "amount_vs_customer_median": 1.02,
+      "customer_avg_days_late": 71,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:churn-threat"
+    }
+  },
+  {
+    "invoice_id": "INV-2430",
+    "customer_id": "C-12",
+    "risk": "high",
+    "reasons": [
+      "customer settles 16d late on average (73% of past invoices paid after due)",
+      "14d until due",
+      "this invoice is held for human review (unverified-paid-claim)",
+      "1 other open invoice for this customer is disputed/held (INV-2431)"
+    ],
+    "score": 5,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 14,
+      "open_amount": 15018,
+      "amount_vs_customer_median": 1.29,
+      "customer_avg_days_late": 16,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:unverified-paid-claim"
+    }
+  },
+  {
+    "invoice_id": "INV-2431",
+    "customer_id": "C-12",
+    "risk": "high",
+    "reasons": [
+      "customer settles 16d late on average (73% of past invoices paid after due)",
+      "13d until due",
+      "this invoice is held for human review (ambiguous_or_unclear)",
+      "1 other open invoice for this customer is disputed/held (INV-2430)"
+    ],
+    "score": 5,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 13,
+      "open_amount": 11706.36,
+      "amount_vs_customer_median": 1,
+      "customer_avg_days_late": 16,
+      "customer_dispute_replies": 0,
+      "hold_state": "held:ambiguous_or_unclear"
+    }
+  },
+  {
+    "invoice_id": "INV-2090",
+    "customer_id": "C-02",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "only 5d until due with $7,159.84 unpaid",
+      "2 other open invoices for this customer are disputed/held (INV-2087, INV-2085)"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 5,
+      "open_amount": 7159.84,
+      "amount_vs_customer_median": 0.77,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2123",
+    "customer_id": "C-03",
+    "risk": "medium",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "9d until due",
+      "customer has referred this account to legal counsel — automation hard-stopped"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 9,
+      "open_amount": 34814.46,
+      "amount_vs_customer_median": 1.08,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2125",
+    "customer_id": "C-03",
+    "risk": "medium",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "invoice is only 0.5x the customer's median — low exposure",
+      "34d of runway before due",
+      "customer has referred this account to legal counsel — automation hard-stopped"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 34,
+      "open_amount": 17543.97,
+      "amount_vs_customer_median": 0.54,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2126",
+    "customer_id": "C-03",
+    "risk": "medium",
+    "reasons": [
+      "customer settles ~11d late on average",
+      "36d of runway before due",
+      "customer has referred this account to legal counsel — automation hard-stopped"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 36,
+      "open_amount": 34177.59,
+      "amount_vs_customer_median": 1.06,
+      "customer_avg_days_late": 11,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:legal-counsel-invoked"
+    }
+  },
+  {
+    "invoice_id": "INV-2161",
+    "customer_id": "C-04",
+    "risk": "medium",
+    "reasons": [
+      "customer settles ~8d late on average",
+      "1 dispute reply from this customer in the reply history",
+      "27d until due",
+      "this invoice is in a frozen escalation state from an inbound reply (dispute_reference_mismatch)"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 27,
+      "open_amount": 7045.9,
+      "amount_vs_customer_median": 0.61,
+      "customer_avg_days_late": 8,
+      "customer_dispute_replies": 1,
+      "hold_state": "frozen:dispute_reference_mismatch"
+    }
+  },
+  {
+    "invoice_id": "INV-2358",
+    "customer_id": "C-10",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 36d late on average (100% of past invoices paid after due)",
+      "1 dispute reply from this customer in the reply history",
+      "13d until due",
+      "2 other open invoices for this customer are disputed/held (INV-2356, INV-2357)"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 13,
+      "open_amount": 15098.72,
+      "amount_vs_customer_median": 0.99,
+      "customer_avg_days_late": 36,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2359",
+    "customer_id": "C-10",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 36d late on average (100% of past invoices paid after due)",
+      "1 dispute reply from this customer in the reply history",
+      "40d of runway before due",
+      "2 other open invoices for this customer are disputed/held (INV-2356, INV-2357)"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 40,
+      "open_amount": 10049.4,
+      "amount_vs_customer_median": 0.66,
+      "customer_avg_days_late": 36,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2360",
+    "customer_id": "C-10",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 36d late on average (100% of past invoices paid after due)",
+      "1 dispute reply from this customer in the reply history",
+      "30d of runway before due",
+      "2 other open invoices for this customer are disputed/held (INV-2356, INV-2357)"
+    ],
+    "score": 4,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 30,
+      "open_amount": 13046.71,
+      "amount_vs_customer_median": 0.85,
+      "customer_avg_days_late": 36,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2033",
+    "customer_id": "C-01",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "1 dispute reply from this customer in the reply history",
+      "6d until due",
+      "this invoice is in a frozen escalation state from an inbound reply (dispute_reference_mismatch)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 6,
+      "open_amount": 18548.72,
+      "amount_vs_customer_median": 1.01,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 1,
+      "hold_state": "frozen:dispute_reference_mismatch"
+    }
+  },
+  {
+    "invoice_id": "INV-2088",
+    "customer_id": "C-02",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "28d until due",
+      "2 other open invoices for this customer are disputed/held (INV-2087, INV-2085)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 28,
+      "open_amount": 8810.58,
+      "amount_vs_customer_median": 0.95,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2089",
+    "customer_id": "C-02",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 25d late on average (100% of past invoices paid after due)",
+      "7d until due",
+      "2 other open invoices for this customer are disputed/held (INV-2087, INV-2085)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 7,
+      "open_amount": 9977.71,
+      "amount_vs_customer_median": 1.07,
+      "customer_avg_days_late": 25,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2162",
+    "customer_id": "C-04",
+    "risk": "medium",
+    "reasons": [
+      "customer settles ~8d late on average",
+      "1 dispute reply from this customer in the reply history",
+      "21d until due",
+      "1 other open invoice for this customer is disputed/held (INV-2161)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 21,
+      "open_amount": 12659.32,
+      "amount_vs_customer_median": 1.1,
+      "customer_avg_days_late": 8,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2269",
+    "customer_id": "C-07",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "10d until due",
+      "1 other open invoice for this customer is disputed/held (INV-2268)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 10,
+      "open_amount": 6440.05,
+      "amount_vs_customer_median": 1.01,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2270",
+    "customer_id": "C-07",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 21d late on average (100% of past invoices paid after due)",
+      "20d until due",
+      "1 other open invoice for this customer is disputed/held (INV-2268)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 20,
+      "open_amount": 7288.97,
+      "amount_vs_customer_median": 1.15,
+      "customer_avg_days_late": 21,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2287",
+    "customer_id": "C-08",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 15d late on average (100% of past invoices paid after due)",
+      "only 1d until due with $72,054.53 unpaid"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "days_until_due"
+    ],
+    "signals": {
+      "days_until_due": 1,
+      "open_amount": 72054.53,
+      "amount_vs_customer_median": 0.83,
+      "customer_avg_days_late": 15,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2432",
+    "customer_id": "C-12",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 16d late on average (73% of past invoices paid after due)",
+      "18d until due",
+      "2 other open invoices for this customer are disputed/held (INV-2431, INV-2430)"
+    ],
+    "score": 3,
+    "factors_triggered": [
+      "customer_historical_avg_days_late",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 18,
+      "open_amount": 8663.34,
+      "amount_vs_customer_median": 0.74,
+      "customer_avg_days_late": 16,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2034",
+    "customer_id": "C-01",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "1 dispute reply from this customer in the reply history",
+      "15d until due",
+      "1 other open invoice for this customer is disputed/held (INV-2033)"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 15,
+      "open_amount": 25319.36,
+      "amount_vs_customer_median": 1.38,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2035",
+    "customer_id": "C-01",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "1 dispute reply from this customer in the reply history",
+      "invoice is only 0.6x the customer's median — low exposure",
+      "33d of runway before due",
+      "1 other open invoice for this customer is disputed/held (INV-2033)"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 33,
+      "open_amount": 10790.74,
+      "amount_vs_customer_median": 0.59,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2036",
+    "customer_id": "C-01",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "1 dispute reply from this customer in the reply history",
+      "38d of runway before due",
+      "1 other open invoice for this customer is disputed/held (INV-2033)"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "customer_dispute_rate",
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 38,
+      "open_amount": 24842.03,
+      "amount_vs_customer_median": 1.35,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 1,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2229",
+    "customer_id": "C-06",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-2d vs due) — protective",
+      "6d until due",
+      "this invoice is in a frozen escalation state from an inbound reply (request_statement_or_documents)"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 6,
+      "open_amount": 26801.74,
+      "amount_vs_customer_median": 0.96,
+      "customer_avg_days_late": -2,
+      "customer_dispute_replies": 0,
+      "hold_state": "frozen:request_statement_or_documents"
+    }
+  },
+  {
+    "invoice_id": "INV-2288",
+    "customer_id": "C-08",
+    "risk": "medium",
+    "reasons": [
+      "customer settles 15d late on average (100% of past invoices paid after due)",
+      "23d until due"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "customer_historical_avg_days_late"
+    ],
+    "signals": {
+      "days_until_due": 23,
+      "open_amount": 78678.57,
+      "amount_vs_customer_median": 0.91,
+      "customer_avg_days_late": 15,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2377",
+    "customer_id": "C-11",
+    "risk": "medium",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "12d until due",
+      "the AP contact for this invoice has bounced — we currently cannot reach them"
+    ],
+    "score": 2,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 12,
+      "open_amount": 24021.85,
+      "amount_vs_customer_median": 1.05,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 0,
+      "hold_state": "stopped:bounced-contact"
+    }
+  },
+  {
+    "invoice_id": "INV-2232",
+    "customer_id": "C-06",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-2d vs due) — protective",
+      "27d until due",
+      "1 other open invoice for this customer is disputed/held (INV-2229)"
+    ],
+    "score": 1,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 27,
+      "open_amount": 21017.91,
+      "amount_vs_customer_median": 0.75,
+      "customer_avg_days_late": -2,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2233",
+    "customer_id": "C-06",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-2d vs due) — protective",
+      "44d of runway before due",
+      "1 other open invoice for this customer is disputed/held (INV-2229)"
+    ],
+    "score": 1,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 44,
+      "open_amount": 25303.99,
+      "amount_vs_customer_median": 0.9,
+      "customer_avg_days_late": -2,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2234",
+    "customer_id": "C-06",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-2d vs due) — protective",
+      "41d of runway before due",
+      "1 other open invoice for this customer is disputed/held (INV-2229)"
+    ],
+    "score": 1,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 41,
+      "open_amount": 27473.79,
+      "amount_vs_customer_median": 0.98,
+      "customer_avg_days_late": -2,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2378",
+    "customer_id": "C-11",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "54d of runway before due",
+      "1 other open invoice for this customer is disputed/held (INV-2377)"
+    ],
+    "score": 1,
+    "factors_triggered": [
+      "existing_open_dispute_or_hold_state"
+    ],
+    "signals": {
+      "days_until_due": 54,
+      "open_amount": 17815.97,
+      "amount_vs_customer_median": 0.78,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2323",
+    "customer_id": "C-09",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "21d until due"
+    ],
+    "score": 0,
+    "factors_triggered": [],
+    "signals": {
+      "days_until_due": 21,
+      "open_amount": 9765.8,
+      "amount_vs_customer_median": 1.29,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  },
+  {
+    "invoice_id": "INV-2324",
+    "customer_id": "C-09",
+    "risk": "low",
+    "reasons": [
+      "customer settles on time on average (-1d vs due) — protective",
+      "12d until due"
+    ],
+    "score": 0,
+    "factors_triggered": [],
+    "signals": {
+      "days_until_due": 12,
+      "open_amount": 6758.56,
+      "amount_vs_customer_median": 0.89,
+      "customer_avg_days_late": -1,
+      "customer_dispute_replies": 0,
+      "hold_state": null
+    }
+  }
+]
