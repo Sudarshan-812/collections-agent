@@ -378,7 +378,7 @@ function print5(log, id) {
   }
 }
 
-async function main() {
+export async function runReplayCli() {
   const { log, startDate, endDate, dayCount } = await runReplay();
 
   const decisions = log.filter((l) => l.type === 'decision');
@@ -415,5 +415,5 @@ async function main() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main();
+  runReplayCli();
 }

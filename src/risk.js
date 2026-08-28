@@ -232,7 +232,7 @@ function scoreInvoice(inv, { asOfDate, cust, state, customerHolds }) {
 
 // -----------------------------------------------------------------------
 
-async function main() {
+export async function runRiskCli() {
   const { asOfDate, flags } = await computeRiskFlags();
 
   mkdirSync(OUT_DIR, { recursive: true });
@@ -262,5 +262,5 @@ async function main() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main();
+  runRiskCli();
 }
